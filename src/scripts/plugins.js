@@ -1,6 +1,6 @@
 var PluginManager = {
     //The base-url
-    baseUrl: '/plugins/',
+    baseUrl: 'plugins/',
 
     //The globally defined plugins
     plugins: {},

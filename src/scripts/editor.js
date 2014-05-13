@@ -527,6 +527,10 @@ Editor.prototype = {
 
             //First load all plugins
             this.plugins = PluginManager;
+            
+            if (this.options.baseUrl) {
+                this.plugins.baseUrl = this.options.baseUrl + 'plugins/';
+            }
 
             //Render all plugin-files
             for (var x in this.options.plugins) {

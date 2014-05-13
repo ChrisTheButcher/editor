@@ -11,7 +11,30 @@ We also want the content-writer (without any knowledge of HTML) to be able to se
 
 ###Demo
 
-Go to http://dmeijboom.github.io/editor/example.html for an example of the editor.
+Go to http://dmeijboom.github.io/editor for an example of the editor.
+
+
+###Setup for production
+Download the ZIP file of the repository and extract the `build/` folder to `jqeditor/` in your application.
+Then use the following HTML codes to inlude all dependencies in your application:
+
+```html
+<link rel="stylesheet" type="text/css" href="jqeditor/styles/editor.min.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="jqeditor/scripts/editor.min.js"></script>
+```
+
+Then setup the script with the following Javascript code:
+
+```js
+$(document).ready(function() {
+    $(".jqeditor").editify({
+        baseUrl: 'jqeditor/'
+    });
+});
+```
+
+Now all textareas and input fields with the class `jqeditor` will transform into an editor!
 
 
 ###Editor API
@@ -23,7 +46,8 @@ $(document).ready(function() {
     $("#ed").editify({
         menu: ['bold', 'italic', 'underline', 'styles'],
         plugins: ['basic_formatting', 'widgets']
-        stylesheets: []   
+        stylesheets: [],
+        baseUrl: 'jqeditor/'
     });
 });
 ```
@@ -36,6 +60,7 @@ Name | Type | Description
 menu | string[] | The location of each plugin
 plugins | string[] | The plugin-files to load
 stylesheets | string[] | The stylesheet to embed into the editor
+baseUrl | string | The absolute or relative URL to the editor files (must end with a forward slash!)
 
 ####Editor plugins
 To create a plugin you have to create a new folder in the `src/plugins` folder with your plugin name.

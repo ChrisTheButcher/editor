@@ -12,11 +12,18 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link rel="stylesheet" type="text/css" href="build/styles/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="build/styles/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="build/styles/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="build/styles/default.min.css" />
     <script type="text/javascript" src="build/scripts/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="build/scripts/editor.min.js"></script>
       <script type="text/javascript">
           $(document).ready(function() {
-              $("textarea").first().editify();
+              $("textarea").first().editify({
+                  baseUrl: 'build/',
+                  stylesheets: []
+              }).data('jq.editor').loadHtml('<p>hi</p>');
           });
       </script>
     <title>Editor by dmeijboom</title>

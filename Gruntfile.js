@@ -9,14 +9,14 @@ module.exports = function(grunt) {
                 footer: '}(jQuery));'
             },
             build: {
-                src: ['src/scripts/helper.js', 'src/scripts/keys.js', 'src/scripts/plugins.js', 'src/scripts/htmlengine.js', 'src/scripts/editor.js'],
+                src: ['src/scripts/keys.js', 'src/scripts/plugins.js', 'src/scripts/htmlengine.js', 'src/scripts/editor.js'],
                 dest: 'build/scripts/editor.min.js'
             }
         },
         cssmin: {
             combine: {
                 files: {
-                    'build/styles/editor.min.css': ['src/styles/font-awesome.css', 'src/styles/bootstrap.css', 'src/styles/bootstrap.min.css', 'src/styles/editor.css'],
+                    'build/styles/editor.min.css': ['src/styles/font-awesome.css', 'src/styles/bootstrap.css', 'src/styles/bootstrap-theme.css', 'src/styles/editor.css'],
                     'build/styles/editor-inline.min.css': ['src/styles/font-awesome.css', 'src/styles/editor-inline.css']
                 }
             }

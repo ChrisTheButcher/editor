@@ -21,6 +21,8 @@ var PluginManager = {
 
     //When a plugin script is loaded this method is called
     scriptLoaded: function(file) {
+        var p = this;
+        
         this.scriptsLoading -= 1;
 
         if (this.scriptsLoadingTimeout) {
@@ -28,7 +30,9 @@ var PluginManager = {
         }
 
         this.scriptsLoadingTimeout = setTimeout(function() {
-            PluginManager.pluginLoadingDone();
+            if (p.scriptsLoading === 0) {
+                PluginManager.pluginLoadingDone();
+            }
         }, 10);
     },
 

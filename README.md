@@ -18,7 +18,7 @@ Go to http://dmeijboom.github.io/editor/example.html for an example of the edito
 ####jQuery plugin
 The editor is exposed as a jQuery plugin, you can use it by using the following code:
 
-```
+```js
 $(document).ready(function() {
     $("#ed").editify({
         menu: ['bold', 'italic', 'underline', 'styles'],
@@ -41,7 +41,7 @@ stylesheets | string[] | The stylesheet to embed into the editor
 To create a plugin you have to create a new folder in the `src/plugins` folder with your plugin name.
 Then you have to create a file called `script.js` in this folder, you can use the following example for a new plugin:
 
-```
+```js
 //Create a new example plugin
 (function() {
     PluginManager.createPlugin('example', {

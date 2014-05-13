@@ -12,16 +12,13 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="build/styles/bootstrap-theme.min.css" />
-    <link rel="stylesheet" type="text/css" href="build/styles/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="build/styles/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="build/styles/default.min.css" />
-    <script type="text/javascript" src="build/scripts/jquery-2.1.0.min.js"></script>
-    <script type="text/javascript" src="build/scripts/editor.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/dmeijboom/editor/master/build/styles/editor.min.css" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/dmeijboom/editor/master/build/scripts/editor.min.js"></script>
       <script type="text/javascript">
           $(document).ready(function() {
-              $("textarea").first().editify({
-                  baseUrl: 'build/',
+              $("#ed").editify({
+                  baseUrl: 'https://cdn.rawgit.com/dmeijboom/editor/master/build/',
                   stylesheets: []
               });
           });
@@ -41,7 +38,7 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-            <textarea><p>Hi there!</p></textarea>
+            <textarea id="ed">&lt;p&gt;Hi there!&lt;/p&gt;</textarea>
             
           <h1>
 <a name="wysiwyg-editor" class="anchor" href="#wysiwyg-editor"><span class="octicon octicon-link"></span></a>WYSIWYG editor</h1>

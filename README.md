@@ -1,7 +1,12 @@
-editor
+WYSIWYG editor
 ======
+####0.0.1 PRE ALPHA
 
-A different wysiwyg editor specially designed for content-writers.
+A somewhat different wysiwyg editor specially designed for content-writers.
+We don't want crappy HTML to be generated so we use our own HTML engine and overwrite all default actions.
+We also want the content-writer (without any knowledge of HTML) to be able to see the difference between for example a bold tag and a h3 tag.
+
+**Please note that this editor is NOT ready for production!!!**
 
 
 How to build

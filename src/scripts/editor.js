@@ -385,7 +385,8 @@ Editor.prototype = {
 
     //Insert HTML at the current position of the cursor
     insertAtCursor: function(html) {
-        var range = sel.getRangeAt(0),
+        var sel = this.getSelection(),
+            range = sel.getRangeAt(0),
             node = $(html)[0];
 
         range.insertNode(node);
@@ -400,7 +401,8 @@ Editor.prototype = {
     //Insert HTML after the position of the cursor (or actually after the
     //selected element)
     insertAfterCursor: function(html) {
-        var range = sel.getRangeAt(0),
+        var sel = this.getSelection(),
+            range = sel.getRangeAt(0),
             node = $(html)[0];
 
         $(range.endContainer).after(node);
@@ -418,7 +420,8 @@ Editor.prototype = {
     //Insert HTML after the position of the cursor (or actually after the
     //selected element) but use the content-element instead of the selected element
     insertAfterCursorElement: function(html) {
-        var range = sel.getRangeAt(0),
+        var sel = this.getSelection(),
+            range = sel.getRangeAt(0),
             node = $(html)[0],
             contentElement = this.engine.getContentNode(range.endContainer);
 

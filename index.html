@@ -40,28 +40,49 @@
         <section id="main-content">
             <textarea id="ed">&lt;p&gt;Hi there!&lt;/p&gt;</textarea>
             
-          <h1>
-<a name="wysiwyg-editor" class="anchor" href="#wysiwyg-editor"><span class="octicon octicon-link"></span></a>WYSIWYG editor</h1>
+          <h1><a name="user-content-wysiwyg-editor" class="anchor" href="#wysiwyg-editor"><span class="octicon octicon-link"></span></a>WYSIWYG editor</h1>
 
 <h3>
-<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h3>
+<a name="user-content-introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h3>
 
-<p>A somewhat different wysiwyg editor specially designed for content-writers.
-We don't want crappy HTML to be generated so we use our own HTML engine and overwrite all default actions.
-We also want the content-writer (without any knowledge of HTML) to be able to see the difference between for example a bold tag and a h3 tag.</p>
+<p>A somewhat different wysiwyg editor specially designed for content-writers. We don't want crappy HTML to be generated so we use our own HTML engine and overwrite all default actions. We also want the content-writer (without any knowledge of HTML) to be able to see the difference between for example a bold tag and a h3 tag.</p>
 
-<p><strong>Please note that this editor is NOT ready for production!!!</strong></p>
-
-<h3>
-<a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h3>
-
-<p>Go to <a href="http://dmeijboom.github.io/editor/example.html">http://dmeijboom.github.io/editor/example.html</a> for an example of the editor.</p>
+<p><strong>Please note that this editor is NOT ready for production!!!</strong>
+</p>
 
 <h3>
-<a name="editor-api" class="anchor" href="#editor-api"><span class="octicon octicon-link"></span></a>Editor API</h3>
+<a name="user-content-demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h3>
+
+<p>Go to <a href="http://dmeijboom.github.io/editor">http://dmeijboom.github.io/editor</a> for an example of the editor.</p>
+
+<h3>
+<a name="user-content-setup-for-production" class="anchor" href="#setup-for-production"><span class="octicon octicon-link"></span></a>Setup for production</h3>
+
+<p>Download the ZIP file of the repository and extract the <code>build/</code> folder to <code>jqeditor/</code> in your application. Then use the following HTML codes to inlude all dependencies in your application:</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">href=</span><span class="s">"jqeditor/styles/editor.min.css"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"https://code.jquery.com/jquery-2.1.1.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"jqeditor/scripts/editor.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+</div>
+
+<p>Then setup the script with the following Javascript code:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">".jqeditor"</span><span class="p">).</span><span class="nx">editify</span><span class="p">({</span>
+        <span class="nx">baseUrl</span><span class="o">:</span> <span class="s1">'jqeditor/'</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+<p>Now all textareas and input fields with the class <code>jqeditor</code> will transform into an editor!</p>
+
+<h3>
+<a name="user-content-editor-api" class="anchor" href="#editor-api"><span class="octicon octicon-link"></span></a>Editor API</h3>
 
 <h4>
-<a name="jquery-plugin" class="anchor" href="#jquery-plugin"><span class="octicon octicon-link"></span></a>jQuery plugin</h4>
+<a name="user-content-jquery-plugin" class="anchor" href="#jquery-plugin"><span class="octicon octicon-link"></span></a>jQuery plugin</h4>
 
 <p>The editor is exposed as a jQuery plugin, you can use it by using the following code:</p>
 
@@ -69,42 +90,50 @@ We also want the content-writer (without any knowledge of HTML) to be able to se
     <span class="nx">$</span><span class="p">(</span><span class="s2">"#ed"</span><span class="p">).</span><span class="nx">editify</span><span class="p">({</span>
         <span class="nx">menu</span><span class="o">:</span> <span class="p">[</span><span class="s1">'bold'</span><span class="p">,</span> <span class="s1">'italic'</span><span class="p">,</span> <span class="s1">'underline'</span><span class="p">,</span> <span class="s1">'styles'</span><span class="p">],</span>
         <span class="nx">plugins</span><span class="o">:</span> <span class="p">[</span><span class="s1">'basic_formatting'</span><span class="p">,</span> <span class="s1">'widgets'</span><span class="p">]</span>
-        <span class="nx">stylesheets</span><span class="o">:</span> <span class="p">[]</span>   
+        <span class="nx">stylesheets</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="nx">baseUrl</span><span class="o">:</span> <span class="s1">'jqeditor/'</span>
     <span class="p">});</span>
 <span class="p">});</span>
-</pre></div>
+</pre>
+</div>
 
-<p>Where <code>#ed</code> is ofcourse the selector of the textarea or input field.
-Currently we support the following settings in the jQuery plugin:</p>
+<p>Where <code>#ed</code> is ofcourse the selector of the textarea or input field. Currently we support the following settings in the jQuery plugin:</p>
 
 <table>
-<thead><tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>menu</td>
-<td>string[]</td>
-<td>The location of each plugin</td>
-</tr>
-<tr>
-<td>plugins</td>
-<td>string[]</td>
-<td>The plugin-files to load</td>
-</tr>
-<tr>
-<td>stylesheets</td>
-<td>string[]</td>
-<td>The stylesheet to embed into the editor</td>
-</tr>
-</tbody>
-</table><h4>
-<a name="editor-plugins" class="anchor" href="#editor-plugins"><span class="octicon octicon-link"></span></a>Editor plugins</h4>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>menu</td>
+            <td>string[]</td>
+            <td>The location of each plugin</td>
+        </tr>
+        <tr>
+            <td>plugins</td>
+            <td>string[]</td>
+            <td>The plugin-files to load</td>
+        </tr>
+        <tr>
+            <td>stylesheets</td>
+            <td>string[]</td>
+            <td>The stylesheet to embed into the editor</td>
+        </tr>
+        <tr>
+            <td>baseUrl</td>
+            <td>string</td>
+            <td>The absolute or relative URL to the editor files (must end with a forward slash!)</td>
+        </tr>
+    </tbody>
+</table>
+<h4>
+<a name="user-content-editor-plugins" class="anchor" href="#editor-plugins"><span class="octicon octicon-link"></span></a>Editor plugins</h4>
 
-<p>To create a plugin you have to create a new folder in the <code>src/plugins</code> folder with your plugin name.
-Then you have to create a file called <code>script.js</code> in this folder, you can use the following example for a new plugin:</p>
+<p>To create a plugin you have to create a new folder in the <code>src/plugins</code> folder with your plugin name. Then you have to create a file called <code>script.js</code> in this folder, you can use the following example for a new plugin:</p>
 
 <div class="highlight highlight-js"><pre><span class="c1">//Create a new example plugin</span>
 <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -141,15 +170,15 @@ Then you have to create a file called <code>script.js</code> in this folder, you
         <span class="p">}</span>
     <span class="p">});</span>
 <span class="p">}());</span>
-</pre></div>
+</pre>
+</div>
 
 <p>After creating your plugin make sure the name of the plugin-file is used in the <code>plugins</code> array and the plugins themself (in our case bold, hi and styles) are in the <code>menu</code> array.</p>
 
 <h3>
-<a name="how-to-build" class="anchor" href="#how-to-build"><span class="octicon octicon-link"></span></a>How to build</h3>
+<a name="user-content-how-to-build" class="anchor" href="#how-to-build"><span class="octicon octicon-link"></span></a>How to build</h3>
 
-<p>I use <code>grunt</code> and <code>nodeJS</code> to build the entire project, both software runs on Windows, Mac Osx and Linux.
-The first thing you should do is set-up NodeJS which can be done by going to: <a href="http://nodejs.org/">http://nodejs.org/</a> and press the 'install' button (make sure that node is in your PATH variable so it can be accessed globally).</p>
+<p>I use <code>grunt</code> and <code>nodeJS</code> to build the entire project, both software runs on Windows, Mac Osx and Linux. The first thing you should do is set-up NodeJS which can be done by going to: <a href="http://nodejs.org/">http://nodejs.org/</a> and press the 'install' button (make sure that node is in your PATH variable so it can be accessed globally).</p>
 
 <p>The next step is to get the source-code from GitHub you can either use the GIT command-line tools, download the repository as a ZIP file or use the GitHub client app (which can be downloaded here: <a href="https://mac.github.com/">https://mac.github.com/</a> or here: <a href="https://windows.github.com/">https://windows.github.com/</a>).</p>
 
@@ -175,11 +204,10 @@ The first thing you should do is set-up NodeJS which can be done by going to: <a
 
 <p>This will create a new static-file webserver which can be used to view the editor (a webserver is needed since I use ajax in the code). The default port is <code>8080</code> which can be changed in the <code>/app.js</code> file.</p>
 
-<p>Go to http://localhost:8080 in your browser and voila!
-Please note that on every change you should run <code>grunt</code> again!</p>
+<p>Go to http://localhost:8080 in your browser and voila! Please note that on every change you should run <code>grunt</code> again!</p>
 
 <h3>
-<a name="browser-support" class="anchor" href="#browser-support"><span class="octicon octicon-link"></span></a>Browser support</h3>
+<a name="user-content-browser-support" class="anchor" href="#browser-support"><span class="octicon octicon-link"></span></a>Browser support</h3>
 
 <p>Currently I only tested the editor in Google Chrome (on Mac Osx) and Safari (on Mac Osx). But it will support IE9+, Chrome, Firefox, Safari and other browsers based on WebKit or the Gecko Engine.</p>
         </section>

@@ -2,16 +2,19 @@
 <html>
 <head>
     <title>Editor</title>
-    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="styles/bootstrap-theme.min.css" />
-    <link rel="stylesheet" type="text/css" href="styles/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="styles/default.min.css" />
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="styles/editor.min.css" />
     <script type="text/javascript" src="scripts/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="scripts/editor.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $("#ed").editify({
-                stylesheets: []   
+                stylesheets: [] 
             });
         });
     </script>

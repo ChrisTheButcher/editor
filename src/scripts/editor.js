@@ -446,8 +446,7 @@ Editor.prototype = {
         var $head = HtmlEngine('head').append(HtmlEngine('title').html('Editor'));
 
         //Add our internal styles
-        opts.styles.push(this.options.baseUrl + 'styles/font-awesome.min.css');
-        opts.styles.push(this.options.baseUrl + 'styles/editor-inline.min.css');
+        opts.styles.push(opts.baseUrl + 'styles/editor-inline.min.css');
 
         $.each(opts.styles, function() {
             $head.append(HtmlEngine('link[rel="stylesheet", href=?]', this));
@@ -498,7 +497,8 @@ Editor.prototype = {
         this.$overlay = this.$editor.find('.ed-overlay');
         this.$frameDoc.find('head').html(this.buildHead({
             styles: this.options.stylesheets,
-            scripts: []
+            scripts: [],
+            baseUrl: this.options.baseUrl
         }).innerHTML);
 
         //Bind the editor
@@ -557,7 +557,8 @@ $.fn.editify = function(options) {
     var opts = $.extend({
             menu: ['bold', 'italic', 'underline', 'styles'],
             plugins: ['basic_formatting', 'widgets'],
-            stylesheets: []
+            stylesheets: [],
+            baseUrl: ''
         }, options),
         editor = null;
 

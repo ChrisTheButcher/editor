@@ -14,12 +14,11 @@ module.exports = function(grunt) {
             }
         },
         cssmin: {
-            minify: {
-                expand: true,
-                cwd: 'src/styles/',
-                src: ['default.css', 'editor-inline.css'],
-                dest: 'build/styles/',
-                ext: '.min.css'
+            combine: {
+                files: {
+                    'build/styles/editor.min.css': ['src/styles/font-awesome.css', 'src/styles/bootstrap.css', 'src/styles/bootstrap.min.css', 'src/styles/editor.css'],
+                    'build/styles/editor-inline.min.css': ['src/styles/font-awesome.css', 'src/styles/editor-inline.css']
+                }
             }
         },
         
@@ -29,7 +28,7 @@ module.exports = function(grunt) {
         
         watch: {
             scripts: {
-                files: ['src/scripts/*.js'],
+                files: ['src/scripts/*.js', 'src/styles/*.css'],
                 tasks: ['default'],
                 options: {
                     spawn: false,

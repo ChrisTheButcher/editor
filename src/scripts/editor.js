@@ -81,7 +81,7 @@ Editor.prototype = {
 
         //Since we have our own HTML engine we have to overwrite all
         //command you would normally use
-        this.$frameBody.find('body').keydown(function(e) {
+        this.$frameBody.keydown(function(e) {
             var info = Keys.info(e),
                 range = ed.getRange(0);
 
@@ -91,17 +91,16 @@ Editor.prototype = {
             //      content in it so we use this nasty solution
             if (info.is('Shift + Enter')) {
                 e.preventDefault();
+                var br1 = ed.engine.lineBreak(),
+                    br2 = ed.engine.lineBreak()
                 
-                var txt = document.createTextNode('_'),
-                    $br = $(ed.engine.lineBreak()).after(txt);
+                ed.insertAtCursor(br1);
                 
-                range.insertNode($br[0]);
-                range.setStart(txt, 0);
-                range.setEnd(txt, 0);
+                $(br1).after(br2);
+                
+                range.selectNode(br2);
                 
                 ed.focusRange(range);
-                
-                txt.nodeValue = '';
             } 
             //When a regular enter is hit we create a new 'p' tag after the cursor
             else if (info.is('Enter')) {

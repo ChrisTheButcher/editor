@@ -170,7 +170,7 @@ Editor.prototype = {
         } else {
             range = this.surroundCursor(this.engine[style]());
         }
-
+        
         if (range) {
             this.focusRange(range);
         }
@@ -178,7 +178,7 @@ Editor.prototype = {
     
     //Focus a certain range
     focusRange: function(range) {
-        var sel = ed.getSelection();
+        var sel = this.getSelection();
 
         sel.removeAllRanges();
         sel.addRange(range);

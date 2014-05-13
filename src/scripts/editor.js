@@ -446,8 +446,8 @@ Editor.prototype = {
         var $head = HtmlEngine('head').append(HtmlEngine('title').html('Editor'));
 
         //Add our internal styles
-        opts.styles.push('styles/font-awesome.min.css');
-        opts.styles.push('styles/editor-inline.min.css');
+        opts.styles.push(this.options.baseUrl + 'styles/font-awesome.min.css');
+        opts.styles.push(this.options.baseUrl + 'styles/editor-inline.min.css');
 
         $.each(opts.styles, function() {
             $head.append(HtmlEngine('link[rel="stylesheet", href=?]', this));
@@ -556,7 +556,8 @@ Editor.prototype = {
 $.fn.editify = function(options) {
     var opts = $.extend({
             menu: ['bold', 'italic', 'underline', 'styles'],
-            plugins: ['basic_formatting', 'widgets']
+            plugins: ['basic_formatting', 'widgets'],
+            stylesheets: []
         }, options),
         editor = null;
 

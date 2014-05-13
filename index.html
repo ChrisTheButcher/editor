@@ -1,38 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
     <title>Editor by dmeijboom</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>Editor</h1>
-        <h2>A different wysiwyg editor specially designed for content-writers</h2>
-        <a href="https://github.com/dmeijboom/editor" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+      <header>
+        <h1>Editor</h1>
+        <p>A different wysiwyg editor specially designed for content-writers</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/dmeijboom/editor" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/dmeijboom/editor/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/dmeijboom/editor/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>
 <a name="wysiwyg-editor" class="anchor" href="#wysiwyg-editor"><span class="octicon octicon-link"></span></a>WYSIWYG editor</h1>
 
-<h4>
-<a name="001-pre-alpha" class="anchor" href="#001-pre-alpha"><span class="octicon octicon-link"></span></a>0.0.1 PRE ALPHA</h4>
+<h3>
+<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h3>
 
 <p>A somewhat different wysiwyg editor specially designed for content-writers.
 We don't want crappy HTML to be generated so we use our own HTML engine and overwrite all default actions.
@@ -40,8 +51,101 @@ We also want the content-writer (without any knowledge of HTML) to be able to se
 
 <p><strong>Please note that this editor is NOT ready for production!!!</strong></p>
 
-<h1>
-<a name="how-to-build" class="anchor" href="#how-to-build"><span class="octicon octicon-link"></span></a>How to build</h1>
+<h3>
+<a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h3>
+
+<p>Go to <a href="http://dmeijboom.github.io/editor/example.html">http://dmeijboom.github.io/editor/example.html</a> for an example of the editor.</p>
+
+<h3>
+<a name="editor-api" class="anchor" href="#editor-api"><span class="octicon octicon-link"></span></a>Editor API</h3>
+
+<h4>
+<a name="jquery-plugin" class="anchor" href="#jquery-plugin"><span class="octicon octicon-link"></span></a>jQuery plugin</h4>
+
+<p>The editor is exposed as a jQuery plugin, you can use it by using the following code:</p>
+
+<div class="highlight highlight-js"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">"#ed"</span><span class="p">).</span><span class="nx">editify</span><span class="p">({</span>
+        <span class="nx">menu</span><span class="o">:</span> <span class="p">[</span><span class="s1">'bold'</span><span class="p">,</span> <span class="s1">'italic'</span><span class="p">,</span> <span class="s1">'underline'</span><span class="p">,</span> <span class="s1">'styles'</span><span class="p">],</span>
+        <span class="nx">plugins</span><span class="o">:</span> <span class="p">[</span><span class="s1">'basic_formatting'</span><span class="p">,</span> <span class="s1">'widgets'</span><span class="p">]</span>
+        <span class="nx">stylesheets</span><span class="o">:</span> <span class="p">[]</span>   
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Where <code>#ed</code> is ofcourse the selector of the textarea or input field.
+Currently we support the following settings in the jQuery plugin:</p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>menu</td>
+<td>string[]</td>
+<td>The location of each plugin</td>
+</tr>
+<tr>
+<td>plugins</td>
+<td>string[]</td>
+<td>The plugin-files to load</td>
+</tr>
+<tr>
+<td>stylesheets</td>
+<td>string[]</td>
+<td>The stylesheet to embed into the editor</td>
+</tr>
+</tbody>
+</table><h4>
+<a name="editor-plugins" class="anchor" href="#editor-plugins"><span class="octicon octicon-link"></span></a>Editor plugins</h4>
+
+<p>To create a plugin you have to create a new folder in the <code>src/plugins</code> folder with your plugin name.
+Then you have to create a file called <code>script.js</code> in this folder, you can use the following example for a new plugin:</p>
+
+<div class="highlight highlight-js"><pre><span class="c1">//Create a new example plugin</span>
+<span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">PluginManager</span><span class="p">.</span><span class="nx">createPlugin</span><span class="p">(</span><span class="s1">'example'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">init</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">editor</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">//Create a new button which toggles the bold styling</span>
+            <span class="nx">editor</span><span class="p">.</span><span class="nx">addButton</span><span class="p">(</span><span class="s1">'bold'</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">icon</span><span class="o">:</span> <span class="s1">'bold'</span><span class="p">,</span>
+                <span class="nx">click</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">editor</span><span class="p">.</span><span class="nx">toggleStyle</span><span class="p">(</span><span class="s1">'bold'</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+
+            <span class="c1">//Create a new button which alerts 'hi'</span>
+            <span class="nx">editor</span><span class="p">.</span><span class="nx">addButton</span><span class="p">(</span><span class="s1">'hi'</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">icon</span><span class="o">:</span> <span class="s1">'underline'</span><span class="p">,</span>
+                <span class="nx">click</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="nx">alert</span><span class="p">(</span><span class="s1">'hi'</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+
+            <span class="c1">//Create a new select box which uses the value of the selected item to create a new element</span>
+            <span class="nx">editor</span><span class="p">.</span><span class="nx">addSelect</span><span class="p">(</span><span class="s1">'styles'</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">text</span><span class="o">:</span> <span class="s1">'styles'</span><span class="p">,</span>
+                <span class="nx">options</span><span class="o">:</span> <span class="p">[{</span>
+                    <span class="nx">key</span><span class="o">:</span> <span class="s1">'Title'</span><span class="p">,</span> <span class="nx">value</span><span class="o">:</span> <span class="s1">'h1'</span>
+                <span class="p">},</span> <span class="p">{</span>
+                    <span class="nx">key</span><span class="o">:</span> <span class="s1">'SubTitle'</span><span class="p">,</span> <span class="nx">value</span><span class="o">:</span> <span class="s1">'h3'</span>
+                <span class="p">}],</span>
+                <span class="nx">click</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">option</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">editor</span><span class="p">.</span><span class="nx">insertAfterCursorElement</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">'&lt;'</span> <span class="o">+</span> <span class="nx">option</span><span class="p">.</span><span class="nx">value</span> <span class="o">+</span> <span class="s1">'/&gt;'</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s1">'&amp;nbsp;'</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}());</span>
+</pre></div>
+
+<p>After creating your plugin make sure the name of the plugin-file is used in the <code>plugins</code> array and the plugins themself (in our case bold, hi and styles) are in the <code>menu</code> array.</p>
+
+<h3>
+<a name="how-to-build" class="anchor" href="#how-to-build"><span class="octicon octicon-link"></span></a>How to build</h3>
 
 <p>I use <code>grunt</code> and <code>nodeJS</code> to build the entire project, both software runs on Windows, Mac Osx and Linux.
 The first thing you should do is set-up NodeJS which can be done by going to: <a href="http://nodejs.org/">http://nodejs.org/</a> and press the 'install' button (make sure that node is in your PATH variable so it can be accessed globally).</p>
@@ -72,26 +176,19 @@ The first thing you should do is set-up NodeJS which can be done by going to: <a
 
 <p>Go to http://localhost:8080 in your browser and voila!
 Please note that on every change you should run <code>grunt</code> again!</p>
-        </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/dmeijboom/editor/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/dmeijboom/editor/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+<h3>
+<a name="browser-support" class="anchor" href="#browser-support"><span class="octicon octicon-link"></span></a>Browser support</h3>
 
-          <p class="repo-owner"><a href="https://github.com/dmeijboom/editor"></a> is maintained by <a href="https://github.com/dmeijboom">dmeijboom</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+<p>Currently I only tested the editor in Google Chrome (on Mac Osx) and Safari (on Mac Osx). But it will support IE9+, Chrome, Firefox, Safari and other browsers based on WebKit or the Gecko Engine.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/dmeijboom">dmeijboom</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
     </div>
-
-            <script type="text/javascript">
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>

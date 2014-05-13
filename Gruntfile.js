@@ -5,11 +5,11 @@ module.exports = function(grunt) {
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n' +
-                        '(function($) { if (!$) { throw new "jQuery was not loaded"; }',
+                        '(function($) { if (!$) { throw "jQuery not loaded"; } ',
                 footer: '}(jQuery));'
             },
             build: {
-                src: ['src/scripts/keys.js', 'src/scripts/plugins.js', 'src/scripts/htmlengine.js', 'src/scripts/editor.js'],
+                src: ['src/scripts/helper.js', 'src/scripts/keys.js', 'src/scripts/plugins.js', 'src/scripts/htmlengine.js', 'src/scripts/editor.js'],
                 dest: 'build/scripts/editor.min.js'
             }
         },

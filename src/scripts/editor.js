@@ -49,17 +49,41 @@ Editor.prototype = {
     //same state but it's just hidden. When the 'bind' method
     //is called some values will reset and it will be visible
     unbind: function() {
-
+        this.$frameBody.unbind('keydown');
+        this.$editor.off('click', '**');
+        this.$frameBody.off('mouseup mousedown keyup keydown', '**');
     },
 
     //This method re-activates the editor after a call to 'unbind'
     bind: function() {
         var ed = this;
+        
+        //Bind some events
+        this.$editor.on('click', '.ed-close-overlay', function(e) {
+            ed.hideScreen();
+        });
+
+        //This is a fix for the :focus selector since we don't make the elements editable but
+        //instead the entire iframe (actually only the body tag)
+        this.$frameBody.on('mouseup mousedown', function(e) {
+            var range = ed.getRange(0);
+            
+            if (range) {
+                ed.$frameBody.find('.ed-element-focus').removeClass('ed-element-focus');
+                $(ed.engine.getContentNode(range.endContainer)).addClass('ed-element-focus');
+            }
+        });
+
+        this.$frameBody.on('keyup keydown', function(e) {
+            ed.$frameBody.find('.ed-element-focus').removeClass('ed-element-focus');
+            $(ed.engine.getContentNode(ed.getRange(0).endContainer)).addClass('ed-element-focus');
+        });
 
         //Since we have our own HTML engine we have to overwrite all
         //command you would normally use
-        this.$frameDoc.find('body').keydown(function(e) {
-            var info = Keys.info(e);
+        this.$frameBody.find('body').keydown(function(e) {
+            var info = Keys.info(e),
+                range = ed.getRange(0);
 
             //With an enter we generate a 'p' tag while with the
             //combination: Shift + Enter we generate a 'br' tag
@@ -68,70 +92,51 @@ Editor.prototype = {
             if (info.is('Shift + Enter')) {
                 e.preventDefault();
                 
-                var range = ed.getRange(0),
-                    br = ed.engine.lineBreak(),
-                    txt = document.createTextNode('_');
+                var txt = document.createTextNode('_'),
+                    $br = $(ed.engine.lineBreak()).after(txt);
                 
-                range.insertNode(br);
-                
-                $(br).after(txt);
-                
+                range.insertNode($br[0]);
                 range.setStart(txt, 0);
                 range.setEnd(txt, 0);
                 
-                var sel = ed.getSelection();
-
-                sel.removeAllRanges();
-                sel.addRange(range);
+                ed.focusRange(range);
                 
                 txt.nodeValue = '';
-            } else if (info.is('Enter')) {
+            } 
+            //When a regular enter is hit we create a new 'p' tag after the cursor
+            else if (info.is('Enter')) {
                 e.preventDefault();
 
-                var range = ed.getRange(0);
+                var element = ed.engine.getElement(range.endContainer),
+                    $element = $(element),
+                    contentNode = ed.engine.content();
 
-                //When a regular enter is hit we create a new 'p' tag after the cursor
-                if (range.endContainer.nodeName.toLowerCase() == 'p' ||
-                    (range.endContainer.parentNode &&
-                     range.endContainer.parentNode.nodeName.toLowerCase() == 'p')) {
-                    var pnode = range.endContainer.parentNode.nodeName.toLowerCase() == 'p' ? 
-                                range.endContainer.parentNode : 
-                                range.endContainer,
-                        contentNode = ed.engine.content(),
-                        newNode = $(pnode).after(contentNode);
-
+                //If the element is an element which doesn't need a p-tag
+                if ($element.is('p,h1,h2,h3,h4,h5,h6,table,blockquote')) {
+                    $element.after(contentNode);
                     range.setStart(contentNode, 0);
                     range.setEnd(contentNode, 0);
                 } 
                 //When the user is in a list we create a new list-item after the current item
-                else if (range.endContainer.parentNode &&
-                           ['ul', 'ol', 'li'].indexOf(range.endContainer.parentNode.nodeName.toLowerCase()) > -1) {
+                else if ($(range.endContainer.parentNode).is('ul,ol,li')) {
                     var list = range.endContainer.parentNode;
 
                     //When the previous list-item is empty we just create a new linebreak (just like
                     //in a regular editor)
-                    if (list.innerHTML.length === 0 || ['ul', 'ol'].indexOf(list.nodeName.toLowerCase()) > -1) {
-                        var contentNode = ed.engine.content(),
-                            newNode = $(list.nodeName.toLowerCase() == 'li' ? range.endContainer.parentNode.parentNode : range.endContainer.parentNode).after(contentNode);
-
-                        range.setStart(contentNode, 0);
-                        range.setEnd(contentNode, 0);
+                    if (list.innerHTML.length === 0 || $(list).is('ol,ul')) {
+                        $(list.nodeName.toLowerCase() == 'li' ? range.endContainer.parentNode.parentNode : range.endContainer.parentNode).after(contentNode);
                     } else {
-                        var contentNode = ed.engine.listItem(),
-                            newNode = $(range.endContainer.parentNode).after(contentNode);
-
-                        range.setStart(contentNode, 0);
-                        range.setEnd(contentNode, 0);
+                        $(range.endContainer.parentNode).after(contentNode);
                     }
+
+                    range.setStart(contentNode, 0);
+                    range.setEnd(contentNode, 0);
                 } else {
                     ed.insertAtCursor(ed.engine.content());
                     return;
                 }
 
-                var sel = ed.getSelection();
-
-                sel.removeAllRanges();
-                sel.addRange(range);
+                ed.focusRange(range);
             }
 
             if (info.is('Ctrl + B')) {
@@ -167,12 +172,16 @@ Editor.prototype = {
         }
 
         if (range) {
-            //Select the nodes
-            var sel = this.getSelection();
-
-            sel.removeAllRanges();
-            sel.addRange(range);
+            this.focusRange(range);
         }
+    },
+    
+    //Focus a certain range
+    focusRange: function(range) {
+        var sel = ed.getSelection();
+
+        sel.removeAllRanges();
+        sel.addRange(range);
     },
 
     //Show a certain overlay
@@ -203,9 +212,8 @@ Editor.prototype = {
             click: function() { },
 
             getElement: function() {
-                var $icon = $('<i/>').addClass('fa fa-' + this.icon),
-                    $link = $('<a/>').attr('href', '#').attr('title', this.name).addClass('ed-icon');
-
+                var $icon = HtmlEngine('i.fa.fa-' + this.icon),
+                    $link = HtmlEngine('a.ed-icon[href="", title=?]', this.name);
                 return $link.append($icon);
             }
         }, options));
@@ -220,20 +228,20 @@ Editor.prototype = {
             click: function() { },
 
             getElement: function() {
-                var $div = $('<div/>').addClass('ed-select'),
-                    $icon = $('<i/>').addClass('fa fa-angle-down'),
-                    $span = $('<span/>').html(this.text || this.options[0].key);
+                var $div = HtmlEngine('.ed-select'),
+                    $icon = HtmlEngine('i.fa.fa-angle-down'),
+                    $span = HtmlEngine('span').html(this.text || this.options[0].key);
 
                 //Construct the elment
                 $div.append($icon).append($span);
 
                 //Now create the inner-select and their options
-                var $innerDiv = $('<div/>').addClass('ed-select-inner');
+                var $innerDiv = HtmlEngine('.ed-select-inner');
 
                 for (var x in this.options) {
                     var opt = this.options[x];
 
-                    $innerDiv.append($('<div/>').addClass('ed-select-option').html(opt.key).data('opt', opt));
+                    $innerDiv.append(HtmlEngine('.ed-select-option').html(opt.key).data('opt', opt));
                 }
 
                 return $div.append($innerDiv);
@@ -265,6 +273,7 @@ Editor.prototype = {
 
             this.$editorHeader.append($btn);
 
+            //The select-plugin code
             if ($btn.hasClass('ed-select')) {
                 $btn.hover(function(e) {
                     e.preventDefault();
@@ -298,7 +307,8 @@ Editor.prototype = {
 
     //Get a certain range
     getRange: function(nr) {
-        return this.getSelection().getRangeAt(nr ? nr : 0);
+        var sel = this.getSelection();
+        return sel.type == 'None' ? false : this.getSelection().getRangeAt(nr ? nr : 0);
     },
 
     //With this method you can calculate a new offset containing only
@@ -375,16 +385,14 @@ Editor.prototype = {
 
     //Insert HTML at the current position of the cursor
     insertAtCursor: function(html) {
-        var sel = this.getSelection(),
-            range = sel.getRangeAt(0),
+        var range = sel.getRangeAt(0),
             node = $(html)[0];
 
         range.insertNode(node);
         range.setStart(node, 0);
         range.setEnd(node, 0);
 
-        sel.removeAllRanges();
-        sel.addRange(range);
+        this.focusRange(range);
 
         return range;
     },
@@ -392,8 +400,7 @@ Editor.prototype = {
     //Insert HTML after the position of the cursor (or actually after the
     //selected element)
     insertAfterCursor: function(html) {
-        var sel = this.getSelection(),
-            range = sel.getRangeAt(0),
+        var range = sel.getRangeAt(0),
             node = $(html)[0];
 
         $(range.endContainer).after(node);
@@ -403,8 +410,7 @@ Editor.prototype = {
         range.setStart(node, 0);
         range.setEnd(node, 0);
 
-        sel.removeAllRanges();
-        sel.addRange(range);
+        this.focusRange(range);
 
         return range;
     },
@@ -412,8 +418,7 @@ Editor.prototype = {
     //Insert HTML after the position of the cursor (or actually after the
     //selected element) but use the content-element instead of the selected element
     insertAfterCursorElement: function(html) {
-        var sel = this.getSelection(),
-            range = sel.getRangeAt(0),
+        var range = sel.getRangeAt(0),
             node = $(html)[0],
             contentElement = this.engine.getContentNode(range.endContainer);
 
@@ -424,9 +429,8 @@ Editor.prototype = {
 
             range.setStart(node, 0);
             range.setEnd(node, 0);
-
-            sel.removeAllRanges();
-            sel.addRange(range);
+            
+            this.focusRange(range);
         }
 
         return range;
@@ -439,17 +443,17 @@ Editor.prototype = {
 
     //Build the enitre 'head' tag from scripts and stylesheets
     buildHead: function(opts) {
-        var head = '<title>Editor</title>';
+        var $head = HtmlEngine('head').append(HtmlEngine('title').html('Editor'));
 
         //Add our internal styles
         opts.styles.push('styles/font-awesome.min.css');
         opts.styles.push('styles/editor-inline.min.css');
 
         $.each(opts.styles, function() {
-            head += '<link rel="stylesheet" type="text/css" href="' + this + '" />\n';
+            $head.append(HtmlEngine('link[rel="stylesheet", href=?]', this));
         });
 
-        return head;
+        return $head[0];
     },
 
     //Make a certain element editable
@@ -495,11 +499,11 @@ Editor.prototype = {
         this.$frameDoc.find('head').html(this.buildHead({
             styles: this.options.stylesheets,
             scripts: []
-        }));
+        }).innerHTML);
 
         //Bind the editor
-        this.makeEditable(this.$frameDoc.find('body'));
-        this.loadHtml(content && content.length > 0 ? content : this.engine.content());
+        this.makeEditable(this.$frameBody);
+        this.loadHtml(!content || (content && content.length == 0) ? this.engine.content() : content);
 
         //Dispatch all plugins and buttons
         for (var x in this.options.plugins) {
@@ -509,27 +513,6 @@ Editor.prototype = {
         for (var x in this.options.menu) {
             this.bindButton(this.options.menu[x]);
         }
-
-        //Bind some events
-        this.$editor.on('click', '.ed-close-overlay', function(e) {
-            ed.hideScreen();
-        });
-
-        //This is a fix for the :focus selector since we don't make the elements editable but
-        //instead the entire iframe (actually only the body tag)
-        this.$frameBody.on('mouseup mousedown', function(e) {
-            ed.$frameBody.find('.ed-element-focus').removeClass('ed-element-focus');
-
-            $(ed.engine.getContentNode(e.target)).addClass('ed-element-focus');
-        });
-
-        this.$frameBody.on('keyup keydown', function(e) {
-            var range = ed.getRange(0);
-
-            ed.$frameBody.find('.ed-element-focus').removeClass('ed-element-focus');
-
-            $(ed.engine.getContentNode(range.endContainer)).addClass('ed-element-focus');
-        });
 
         this.bind();
     },

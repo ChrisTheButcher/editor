@@ -1,11 +1,22 @@
 var HtmlEngine = function(options) {
-    this.options = $.extend({
-        mode: 'html5',
-        useCss: false
-    }, options);
+    if (typeof(options) === 'string') {
+        var args = [];
+        
+        for (var x in arguments) {
+            args.push(arguments[x]);
+        }
+        
+        return HtmlEngine.createElement.apply(HtmlEngine, args);
+    } else {
+        this.options = $.extend({
+            mode: 'html5',
+            useCss: false
+        }, options);
+    }
 };
 
-//Element style list
+var AllElementsList = ['a','abbr','acronym','address','applet','area','article','aside','audio','b','base','basefont','bdi','bdo','bgsound','big','blink','blockquote','body','br','button','canvas','caption','center','cite','code','col','colgroup','content','data','datalist','dd','decorator','del','details','dfn','dir','div','dl','dt','element','em','embed','fieldset','figcaption','figure','font','footer','form','frame','frameset','h1','h2','h3','h4','h5','h6','head','header','hgroup','hr','html','i','iframe','img','input','ins','isindex','kbd','keygen','label','legend','li','link','listing','main','map','mark','marquee','menu','menuitem','meta','meter','nav','nobr','noframes','noscript','object','ol','optgroup','option','output','p','param','plaintext','pre','progress','q','rp','rt','ruby','s','samp','script','section','select','shadow','small','source','spacer','span','strike','strong','style','sub','summary','sup','table','tbody','td','template','textarea','tfoot','th','thead','time','title','tr','track','tt','u','ul','var','video','wbr','xmp'];
+
 var ElementList = {
     'bold': ['b', 'strong', function(n) {
         return n && n.style.fontWeight == 'bold' && n.nodeName.toLowerCase() == 'span';
@@ -20,15 +31,12 @@ var ElementList = {
     }]
 };
 
-//Defines all content elements
-var ContentElements = ['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'table', 'blockquote'];
-
 HtmlEngine.prototype = {
     //Get a regular line-break (br tag)
     lineBreak: function() {
         return document.createElement('br');
     },
-
+    
     convert: {
         //Convert editor-code to HTML
         toHTML: function(code) {
@@ -65,7 +73,7 @@ HtmlEngine.prototype = {
 
         //Convert HTML to editor-code
         toCode: function(html) {
-            var $el = $('<div/>').html(html),
+            var $el = HtmlEngine('div').html(html),
                 conv = this;
 
             //Replace all iFrames with widgets
@@ -103,7 +111,9 @@ HtmlEngine.prototype = {
 
     //Get a content-node (using a parent-lookup)
     getContentNode: function(node) {
-        return  ContentElements.indexOf(node.nodeName.toLowerCase()) === -1 ? 
+        var elementList = ['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol'];
+
+        return  elementList.indexOf(node.nodeName.toLowerCase()) === -1 ? 
                 ( node.parentNode ? this.getContentNode(node.parentNode) : false ) : 
                 node;
     },
@@ -142,8 +152,18 @@ HtmlEngine.prototype = {
             return document.createElement('u');
         }
     },
+    
+    //Checks if the node is a content-element
+    isContentElement: function(node) {
+        return this.getContentNode(node) !== false;
+    },
+    
+    //Get a non-textnode element
+    getElement: function(node) {
+        return node.nodeType === 3 ? ( !node.parentNode ? false : this.getElement(node.parentNode) ) : node;
+    },
 
-    //Check if the given node is a certain element
+    //Checks if the given node is a certain element
     isElement: function(node, name, alsoParent, cur) {
         var els = ElementList[name],
             nodeName = node.nodeName.toLowerCase(),
@@ -167,6 +187,57 @@ HtmlEngine.prototype = {
             return false;
         }
     }
+};
+
+//Create an element from a string, for example the following string: strong.test.tester#lol[title="hi"]
+//will create: <strong class="test tester" id="lol" title="hi"></strong>
+HtmlEngine.createElement = function(name) {
+    if (AllElementsList.indexOf(name) > -1) {
+        return $(document.createElement(name));
+    }
+    
+    var matches = name.match(/[#\.\[]{1}([a-zA-Z= \"_\-,\?]*)/g),
+        nodeName = name.match(/^[a-zA-Z]*/),
+        node = document.createElement(nodeName[0].length === 0 ? 'div' : nodeName[0]),
+        args = arguments,
+        argIndex = 1;
+    
+    for (var x in matches) {
+        var m = matches[x],
+            val = m.substr(1);
+        
+        switch (m[0]) {
+            case '.':
+                node.className += ' ' + val;
+                break;
+                
+            case '#':
+                node.id = val;
+                break;
+                
+            case '[':
+                var attrs = val.split(', ');
+                
+                for (var y in attrs) {
+                    var attr = attrs[y].split('='),
+                        attrKey = attr[0],
+                        attrValue = attr[1] == '?' ? args[argIndex].toString() : attr[1].substr(1, attr[1].length - 2);
+                    
+                    if (attr[1] == '?') {
+                        argIndex++;
+                    }
+                    
+                    node.setAttribute(attrKey, attrValue);
+                }
+                break;
+        }
+    }
+    
+    if (node.className.length > 0) {
+        node.className = node.className.substr(1);
+    }
+    
+    return $(node);
 };
 
 window.HtmlEngine = HtmlEngine;

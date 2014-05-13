@@ -1,0 +1,145 @@
+* {
+    outline: none;
+}
+
+html, body {
+    margin: 10px 15px;
+    padding: 0;
+    font-size: 13px;
+    font-family: sans-serif;
+}
+
+/*
+    The ribbon style
+    */
+body:before {
+    display: block;
+    content: "";
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 22px;
+    background-color: #f9f9f9;
+    border-right: 1px solid #f2f2f2;
+}
+
+
+/*
+    The inline style usage
+    */
+p {
+    padding: 3px;
+    margin-bottom: 20px;
+    min-height: 16px;
+}
+
+img {
+    resize: both;
+}
+
+
+/*
+    Element recognition styling
+    */
+p:before,
+ul:before,
+ol:before,
+ol:before,
+h1:before,
+h2:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before,
+.ed-widget-youtube:before {
+    left: 3px;
+    z-index: 2;
+    width: 10px;
+    height: 15px;
+    opacity: .2;
+    display: block;
+    text-align: center;
+    position: absolute;
+    transition: all .1s;
+    font-size: 15px !important;
+}
+
+p:before {
+    content: "\00B6";
+}
+
+ul:before,
+ol:before,
+h1:before,
+h2:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before,
+.ed-widget-youtube:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; 
+}
+
+ul:before {
+    content: "\f0ca";
+}
+
+ol:before {
+    content: "\f0cb";
+}
+
+.ed-widget-youtube:before {
+    content: "\f16a";   
+}
+
+h1:before,
+h2:before,
+h3:before,
+h4:before,
+h5:before,
+h6:before {
+    content: "\f031";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+/*    display: block;*/
+}
+
+.ed-element-focus:before, 
+.ed-element-focus:before {
+    opacity: 1;
+}
+
+
+/*
+    Widget styling
+    */
+.ed-widget {
+    cursor: pointer;
+    display: block;
+    opacity: .9;
+    transition: all .2s;
+    border: 1px solid #ddd;
+}
+
+.ed-widget:hover {
+    opacity: 1;
+}
+
+.ed-widget-youtube {
+    background-image: url(../images/youtube-thumbnail.jpg);
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+}

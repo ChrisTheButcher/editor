@@ -25,12 +25,23 @@ module.exports = function(grunt) {
         
         plugins: {
             
+        },
+        
+        watch: {
+            scripts: {
+                files: ['src/scripts/*.js'],
+                tasks: ['default'],
+                options: {
+                    spawn: false,
+                },
+            },
         }
     });
 
     // Load all plugins
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task(s).
     grunt.registerTask('default', ['uglify', 'cssmin', 'plugins']);
@@ -38,7 +49,7 @@ module.exports = function(grunt) {
     //Copy the plugins to the build directory
     grunt.registerTask('plugins', 'Copy the plugins to the build directory', function() {
         var ncp = require('ncp').ncp,
-            done = this.async();;
+            done = this.async();
         
         ncp.limit = 3;
         ncp('src/plugins', 'build/plugins', function(err) {

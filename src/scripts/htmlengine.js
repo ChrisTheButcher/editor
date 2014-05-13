@@ -5,6 +5,7 @@ var HtmlEngine = function(options) {
     }, options);
 };
 
+//Element style list
 var ElementList = {
     'bold': ['b', 'strong', function(n) {
         return n && n.style.fontWeight == 'bold' && n.nodeName.toLowerCase() == 'span';
@@ -18,6 +19,9 @@ var ElementList = {
         return n && n.style.fontStyle == 'underline' && n.nodeName.toLowerCase() == 'span';
     }]
 };
+
+//Defines all content elements
+var ContentElements = ['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'table', 'blockquote'];
 
 HtmlEngine.prototype = {
     //Get a regular line-break (br tag)
@@ -99,9 +103,7 @@ HtmlEngine.prototype = {
 
     //Get a content-node (using a parent-lookup)
     getContentNode: function(node) {
-        var elementList = ['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol'];
-
-        return  elementList.indexOf(node.nodeName.toLowerCase()) === -1 ? 
+        return  ContentElements.indexOf(node.nodeName.toLowerCase()) === -1 ? 
                 ( node.parentNode ? this.getContentNode(node.parentNode) : false ) : 
                 node;
     },

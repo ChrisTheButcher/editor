@@ -63,10 +63,28 @@ Editor.prototype = {
 
             //With an enter we generate a 'p' tag while with the
             //combination: Shift + Enter we generate a 'br' tag
+            //[bug] Unfortunately we can't select a text-node with no
+            //      content in it so we use this nasty solution
             if (info.is('Shift + Enter')) {
                 e.preventDefault();
-                ed.insertAtCursor(ed.engine.lineBreak());
-                ed.insertAtCursor(ed.engine.lineBreak());
+                
+                var range = ed.getRange(0),
+                    br = ed.engine.lineBreak(),
+                    txt = document.createTextNode('_');
+                
+                range.insertNode(br);
+                
+                $(br).after(txt);
+                
+                range.setStart(txt, 0);
+                range.setEnd(txt, 0);
+                
+                var sel = ed.getSelection();
+
+                sel.removeAllRanges();
+                sel.addRange(range);
+                
+                txt.nodeValue = '';
             } else if (info.is('Enter')) {
                 e.preventDefault();
 
@@ -136,7 +154,7 @@ Editor.prototype = {
     //Make the current selection (or word when nothing is selected) a certain 
     //style. When the selection is already a certain style remove the style it's tag
     //[bug]: This won't work if the element is a nested element, the fix would be to
-    //use a recursive 'parentNode' lookup (with a maximum of course)
+    //       use a recursive 'parentNode' lookup (with a maximum of course)
     toggleStyle: function(style) {
         var range = this.getRange();
 
@@ -481,7 +499,7 @@ Editor.prototype = {
 
         //Bind the editor
         this.makeEditable(this.$frameDoc.find('body'));
-        this.loadHtml(content);
+        this.loadHtml(content && content.length > 0 ? content : this.engine.content());
 
         //Dispatch all plugins and buttons
         for (var x in this.options.plugins) {
